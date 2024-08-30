@@ -1,0 +1,16 @@
+#load KEGG pathway data from Enrichr
+KEGG <- read.csv("9_CCA KEGG.csv", header = TRUE, 
+                   stringsAsFactors = FALSE)
+#arrange descending order of Pvalue
+df <- KEGG %>%
+  arrange(desc("P-value"))
+
+# Reorder the Pathways factor according to the sorted FDR values
+df$Pathway <- factor(df$Pathway, levels = df$Pathway[order(-df$P.value)])
+
+ggplot(df, aes(x= Combined.Score, y=Pathway, size= Overlap, color= P.value)) + geom_point() +
+  theme_classic() +
+  scale_color_gradient(low = "red", high = "black", breaks = c(0.01,0.03, 0.05, 0.07))+ 
+  labs(x = "Combined Score",y = "KEGG 2021 Human",size = "Overlap score",color = "P-value")
+
+## gene names and cutoff line added manually
